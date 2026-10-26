@@ -1,4 +1,4 @@
-﻿"""第一个大模型 Demo：下载 Qwen3-0.6B 并生成文字。
+"""第一个大模型 Demo：下载 Qwen3-0.6B 并生成文字。
 
 运行：  python scripts/hello_llm.py
 首次运行会从 hf-mirror 下载约 1.2 GB，请保证网络畅通。
@@ -6,7 +6,6 @@
 import time
 
 import _console  # noqa: F401  修复 Windows 控制台编码
-
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -23,12 +22,24 @@ def main():
         device_map="cuda",
     )
     model.eval()
-    print(f"加载完成，用时 {time.time() - t0:.1f}s，"
-          f"参数量 {sum(p.numel() for p in model.parameters()) / 1e6:.0f}M")
+    n_params = sum(p.numel() for p in model.parameters()) / 1e6
+    print(f"加载完成，用时 {time.time() - t0:.1f}s，参数量 {n_params:.0f}M")
 
     prompt = "用三句话解释什么是卡尔曼滤波："
     messages = [{"role": "user", "content": prompt}]
-    text = tokenizer.apply_chat_template(`n        messages, tokenize=False, add_generation_prompt=True, enable_thinking=False`n    )
+    try:
+        text = tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
+            enable_thinking=False,
+        )
+    except TypeError:
+        # 老版本 tokenizer 不支持 enable_thinking
+        text = tokenizer.apply_chat_template(
+            messages, tokenize=False, add_generation_prompt=True
+        )
+
     inputs = tokenizer(text, return_tensors="pt").to(model.device)
 
     t0 = time.time()
@@ -42,7 +53,9 @@ def main():
         )
     dt = time.time() - t0
     n_new = out.shape[1] - inputs["input_ids"].shape[1]
-    answer = tokenizer.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+    answer = tokenizer.decode(
+        out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True
+    )
 
     print("\n" + "=" * 58)
     print(f"提问：{prompt}")
@@ -55,5 +68,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
