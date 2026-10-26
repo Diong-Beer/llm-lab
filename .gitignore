@@ -1,0 +1,26 @@
+# 数据与模型（体积大，不入库）
+data/
+output/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.gguf
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+
+# 编辑器
+.vscode/
+.idea/
+
+# 系统
+Thumbs.db
+.DS_Store
+
+# 日志
+*.log
+runs/
