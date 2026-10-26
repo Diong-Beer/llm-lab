@@ -1,8 +1,10 @@
-"""显卡基准测试：确认 PyTorch + CUDA 工作正常，并给出本机性能基线。
+﻿"""显卡基准测试：确认 PyTorch + CUDA 工作正常，并给出本机性能基线。
 
 运行：  python scripts/gpu_bench.py
 """
 import time
+
+import _console  # noqa: F401  修复 Windows 控制台编码
 
 import torch
 
@@ -91,3 +93,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

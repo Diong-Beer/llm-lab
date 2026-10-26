@@ -1,9 +1,11 @@
-"""第一个大模型 Demo：下载 Qwen3-0.6B 并生成文字。
+﻿"""第一个大模型 Demo：下载 Qwen3-0.6B 并生成文字。
 
 运行：  python scripts/hello_llm.py
 首次运行会从 hf-mirror 下载约 1.2 GB，请保证网络畅通。
 """
 import time
+
+import _console  # noqa: F401  修复 Windows 控制台编码
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -55,3 +57,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
