@@ -19,7 +19,7 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
     model = AutoModelForCausalLM.from_pretrained(
         MODEL_ID,
-        torch_dtype=torch.float16,
+        dtype=torch.float16,
         device_map="cuda",
     )
     model.eval()
@@ -28,9 +28,7 @@ def main():
 
     prompt = "用三句话解释什么是卡尔曼滤波："
     messages = [{"role": "user", "content": prompt}]
-    text = tokenizer.apply_chat_template(
-        messages, tokenize=False, add_generation_prompt=True
-    )
+    text = tokenizer.apply_chat_template(`n        messages, tokenize=False, add_generation_prompt=True, enable_thinking=False`n    )
     inputs = tokenizer(text, return_tensors="pt").to(model.device)
 
     t0 = time.time()
@@ -57,4 +55,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
